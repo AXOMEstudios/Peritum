@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="/static/bulma.min.css">
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="icon" href="/static/icon.png">
+    <meta name="title" content="{% block article_title %}{% endblock %}">
+    <meta name="description" content="{% block article_teaser %}{% endblock %}">
+    <script src="/static/script.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+  </head>
+  <body>
+    {% block content %}
+    {% endblock %}
+  </body>
+</html>

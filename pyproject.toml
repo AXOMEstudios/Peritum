@@ -7,6 +7,7 @@ authors = ["AXOME <<>>"]
 [tool.poetry.dependencies]
 python = "^3.8"
 Flask = "^2.0.1"
+replit = "^3.2.4"
 
 [tool.poetry.dev-dependencies]
 
