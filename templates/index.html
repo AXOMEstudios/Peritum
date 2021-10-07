@@ -6,4 +6,29 @@
 {% block content %}
 {% include "components/navbar.html" %}
 
+<section class="hero is-success is-halfheight center-container">
+  <div class="has-text-centered">
+      <p class="title">
+        How can we help you today?
+      </p>
+      <p class="subtitle">
+        Search Peritum to find the best solutions to your problems
+      </p>
+      <form action="/search" class="columns is-vcentered is-mobile mx-3">
+        <input class="input is-rounded is-size-4 is-half" name="query" placeholder="Type your question here...">
+        <button class="is-rounded has-background-success is-borderless" type="submit">
+          <span class="material-icons has-text-link is-size-2">
+            search
+          </span>
+        </button>
+      </form>
+  </div>
+</section>
+<section class="section">
+  <h1 class="title">Hottest articles 	&#128293;</h1>
+  {% for i in hottest %}
+
+  {% endfor %}
+</section>
+
 {% endblock %}

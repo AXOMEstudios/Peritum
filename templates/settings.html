@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Peritum account settings{% endblock %}
+{% block article_title %}Edit your Peritum appearance{% endblock %}
+{% block article_description %}Using this page, you can edit your account settings and online appearance.{% endblock %}
+
+{% block content %}
+{% include "components/navbar.html" %}
+
+<section class="section px-6 my-6">
+  <div class="columns is-vcentered">
+    <div class="column is-one-quarter">
+      <figure class="image">
+        <img src="{{data['pic']}}" class="is-rounded is-profile-pic">
+      </figure>
+    </div>
+    <div class="column px-3">
+      <p class="title">
+        {{name}}
+      </p>
+      <p>
+        <form action="/settings/save-bio" method="POST">
+          <textarea name="bio" class="input is-fullwidth" rows="3">{{data["bio"]}}</textarea><br>
+          <div class="columns">
+          <input class="button is-rounded is-info is-fullwidth mx-2 column" type="submit" value="Save changes">
+          <a type="button" class="button is-warning is-light is-rounded is-fullwidth column" href="/profile/{{name}}">
+            Cancel
+          </a>
+          </div>
+        </form>
+    </div>
+  </div>
+</section>
+<section class="section content">
+<h1>Log-in method</h1>
+Peritum is synchronized with AXOME auth.
+<blockquote>Your Peritum account is accessible under the AXOME account <strong>{{username}}</strong>.<br><br>
+<a class="button is-primary is-rounded" href="https://auth.axome.de/signin?url=https%3A%2F%2Fperitum.axome.repl.co%2Fsignin">
+  Renew log-in
+</a> <a class="button is-danger is-rounded is-light" href="/logout">
+  Log out
+</a>
+</blockquote>
+</section>
+
+{% endblock %}

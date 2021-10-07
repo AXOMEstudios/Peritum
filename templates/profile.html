@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}{{name}} on Peritum{% endblock %}
+{% block article_title %}Profile of {{name}} on Peritum{% endblock %}
+{% block article_description %}{{data["bio"]}}{% endblock %}
+
+{% block content %}
+{% include "components/navbar.html" %}
+
+<section class="section px-6 my-3">
+  <div class="columns is-vcentered">
+    <div class="column is-one-quarter">
+      <figure class="image">
+        <img src="{{data['pic']}}" class="is-rounded is-profile-pic">
+      </figure>
+    </div>
+    <div class="column px-3">
+      <p class="title">
+        {{name}}
+        {% if username == name %}
+          <span class="tag is-info is-medium is-rounded"><a href="/settings" class="has-text-white">Edit profile</a></span>
+        {% endif %}
+      </p>
+      <p>
+        {{data["bio"]}}
+      </p>
+    </div>
+  </div>
+</section>
+<section class="section" id="articles">
+  {% for i in data["articles"] %}
+<div class="notification is-light is-fullwidth is-title">
+  <div class="columns is-fullwidth is-vcentered">
+    <div class="column is-four-fifths">
+      {{i["title"]}}
+      </div<div class="column">v
+  <span class="icon">
+    <i class="fas fa-arrow-right"></i>
+  </span
+      </div>
+    </div
+</div>
+  {% endfor %}
+</section>
+
+{% endblock %}

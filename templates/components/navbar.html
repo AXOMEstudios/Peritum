@@ -17,27 +17,50 @@
         Feed
       </a>
 
-      <div class="navbar-item"
-        <form action="/search">
+      <div class="navbar-item">
+        <form action="/search" class="columns is-mobile mx-3">
           <input class="input is-rounded" name="query" placeholder="Search...">
           <button class="button is-rounded has-background-white is-borderless" type="submit">
             <span class="material-icons has-text-link">
               search
             </span>
           </button>
-      <
+        </form>
       </div>
     </div>
 
     <div class="navbar-end">
       <div class="navbar-item">
         <div class="buttons">
-          <a class="button is-primary is-rounded">
-            <strong>Sign up</strong>
+          {% if username == "" %}
+          <a class="button is-success is-light is-rounded" href="https://auth.axome.de/signin?url=https%3A%2F%2Fperitum.axome.repl.co%2Fsignin">
+            Sign in
           </a>
-          <a class="button is-light is-rounded">
-            Log in
+          {% else %}
+      <div class="navbar-item">
+        <a class="button is-primary is-rounded" href="/write">
+          <strong>+</strong>
+          <a      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          <strong>{{username}}</strong>
+        </a>
+
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="/profile/{{username}}">
+            Profile
           </a>
+          <a class="navbar-item" href="/profile/{{username}}#articles">
+            Articles
+          </a>
+          <a class="navbar-item" href="/settings">
+            Settings
+          </a>
+          <hr class="navbar-divider">
+          <a class="navbar-item has-text-danger" href="/logout">
+            Log out
+          </a>
+        </div>
+          {% endif %}
         </div>
       </div>
     </div>

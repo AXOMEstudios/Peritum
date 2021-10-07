@@ -10,9 +10,31 @@
     <script src="/static/script.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
     {% block content %}
     {% endblock %}
+
+<footer class="footer">
+  <div class="content">
+      <strong class="subtitle">Peritum</strong>
+    <div class="columns">
+      <div class="column is-half">
+        <strong>Community</strong><br>
+        <a href="/">Homepage</a><br>
+        <a href="/profile/{{username}}">Your Profile</a><br>
+        <a href="/settings">Settings</a><br>
+        <a href="/profile/{{username}}#articles">Your articles</a><br>
+      </div>
+      <div class="column is-half">
+        <strong>Legal & support</strong><br><a href="https://policies.axome.repl.co/">Policy Center</a><br>
+        <a href="https://policies.axome.repl.co/privacy.html">Privacy Policy</a><br>
+        <a href="https://policies.axome.repl.co/terms.html">Terms of service</a><br>
+        <a href="mailto:axomedev@gmail.com">Contact us</a><br><a href="http://axome.de/support.html">AXOME support</a><br><a href="https://www.axome.de/">AXOME homepage</a>
+      </div>
+    </div>
+  </div>
+</footer>
   </body>
 </html>

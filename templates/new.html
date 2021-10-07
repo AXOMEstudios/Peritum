@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Welcome to Peritum!{% endblock %}
+{% block article_title %}Peritum - the expert for everything!{% endblock %}
+{% block article_description %}Everyone is a genius at something! Collecting thousands experts like you creates the place where everyone shares knowledge, interests and ideas - which makes Peritum the first place to go when having questions!{% endblock %}
+
+{% block content %}
+{% include "components/navbar.html" %}
+
+<section class="hero is-info is-halfheight center-container">
+  <div class="has-text-centered">
+      <p class="title">
+        Signup successful!
+      </p>
+      <p class="subtitle">
+        Your Peritum account has been created successfully and you're now able to write and publish articles!
+      </p>
+  </div>
+</section>
+<section class="section">
+  <h1 class="title">First steps with Peritum</h1>
+  <ul>
+    <li class="subtitle"><a href="/settings">Customize your appearance</a></li>
+    <li class="subtitle"><a href="/write">Write your first article</a></li>
+    <li class="subtitle"><a href="/">Visit the homepage</a></li>
+  </ul>
+</section>
+
+{% endblock %}
