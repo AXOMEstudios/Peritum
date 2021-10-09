@@ -12,7 +12,22 @@
       rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
-  <body>
+  <body onload="closeClosedMsgs()">
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class="is-flash">
+    {% for category, message in messages %}
+<article class="message is-{{category}} mx-2">
+  <div class="message-body">
+    {{message}}
+  </div>
+</article>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
     {% block content %}
     {% endblock %}
 
@@ -22,7 +37,7 @@
     <div class="columns">
       <div class="column is-half">
         <strong>Community</strong><br>
-        <a href="/">Homepage</a><br>
+       <a href="/">Homepage</a><br>
         <a href="/profile/{{username}}">Your Profile</a><br>
         <a href="/settings">Settings</a><br>
         <a href="/profile/{{username}}#articles">Your articles</a><br>

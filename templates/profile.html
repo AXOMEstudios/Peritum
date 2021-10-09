@@ -6,7 +6,7 @@
 {% block content %}
 {% include "components/navbar.html" %}
 
-<section class="section px-6 my-3">
+<section class="section px-6 my-5">
   <div class="columns is-vcentered">
     <div class="column is-one-quarter">
       <figure class="image">
@@ -27,6 +27,10 @@
   </div>
 </section>
 <section class="section" id="articles">
+  <h1 class="title">Articles by {{name}}</h1>
+  {% if not data["articles"] %}
+  <div class="is-fullwidth has-text-centered"><h1 class="subtitle has-text-grey">{{name}} does not have any articles yet.</h1>
+  {% endif %}
   {% for i in data["articles"] %}
 <div class="notification is-light is-fullwidth is-title">
   <div class="columns is-fullwidth is-vcentered">

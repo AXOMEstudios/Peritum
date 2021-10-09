@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block title %}Write an article{% endblock %}
+{% block article_title %}Peritum - the expert for everything!{% endblock %}
+{% block article_description %}Contribute at Peritum to help out other people with ease and fun!{% endblock %}
+
+{% block content %}
+{% include "components/navbar.html" %}
+
+<section class="section columns my-3">
+  <div class="column is-two-thirds">
+      <p class="title">
+        New article
+      </p>
+      <p class="subtitle">
+        Thanks for writing an article on Peritum to help out many people across the world!
+      </p>
+
+
+<form action="/write/post" method="POST">
+  <input type="text" class="input is-borderless is-medium" name="title" placeholder="Type your title here..."><br><br>
+  <textarea class="input is-borderless" name="title" placeholder="Add a description..." rows=3></textarea><br><br>
+
+<div class="card" onclick="toggleModal('image-chooser')">
+<div class="card-image">
+<figure class="image is-16by9">
+<img src="/static/thumb-default.jpeg" id="preview-large">
+<div class="notification is-info is-light is-overlay">
+  Click to change image.
+</div>
+</figure>
+</div></div><br><br>
+<input type="hidden" name="thumb" value="" id="thumb-url-input">
+<input type="hidden" name="article" value="" id="article-content">
+
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+<div id="editor">
+  <p>Write your article here...</p>
+</div>
+
+<div class="has-text-centered has-text-grey">
+Your draft is being saved all 10 seconds.</div>
+
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script>
+  var quill = new Quill('#editor', {
+    theme: 'snow'
+  });
+  
+try {
+quill.setContents(JSON.parse(localStorage.getItem("draft")));
+} catch(e) {}
+
+quill.on('text-change', function(delta, oldDelta, source) {
+  document.getElementById("article-content").value = JSON.stringify(quill.getContents());
+});
+
+setTimeout(function() {
+  localStorage.setItem("draft", JSON.stringify(quill.getContents()));
+}, 10000);
+</script>
+<hr>
+<button type="submit" class="button is-success is-rounded is-medium is-fullwidth">Publish 
+</button>
+  
+</form>
+    
+  </div>
+  <div class="column">
+<article class="message is-info" id="msg-help">
+  <div class="message-header">
+    <p>Tips</p>
+    <button class="delete" aria-label="delete" onclick="closeMsg('msg-help')"></button>
+  </div>
+  <div class="message-body content">
+    <h3>Writing a good article</h3>
+    When writing an article, you should follow these steps to get a good result:
+    <ul>
+      <li>Bind the reader to the article with interesting ideas and words</li>
+      <li>Talk about possible problems that could occur</li>
+      <li>Use images to make reading more interesting</li>
+    </ul>
+    We wish you much fun writing your article!
+  </div>
+</article>
+<article class="message is-warning" id="msg-warning">
+  <div class="message-header">
+    <p>Warning</p>
+    <button class="delete" aria-label="delete" onclick="closeMsg('msg-warning')"></button>
+  </div>
+  <div class="message-body content">
+    Please do not violate the <a href="https://policies.axome.repl.co/terms.html">AXOME Terms of service</a>.
+ </div>
+</article>
+  </div>
+</section>
+
+<div class="modal" id="image-chooser">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Choose an image</p>
+      <button class="delete" aria-label="close" onclick="toggleModal('image-chooser')"></button>
+    </header>
+    <section class="modal-card-body content">
+      <h1>Pick an image</h1>
+      <div class="columns">
+      <div class="column is-half">
+        <figure class="image is-16by9">
+        <img src="/static/thumb-default.jpeg" id="preview-pic">
+      </figure><br>
+        </div><div class="column is-half">
+      <form action="/settings/save-pic" method="POST" id="chooser-form">
+        <input type="text" class="input" placeholder="Enter image URL..." name="pic" id="pic-url" oninput="document.getElementById('preview-pic').src = this.value; document.getElementById('preview-large').src = this.value; document.getElementById('thumb-url-input').value = this.value;">
+      </form><br>
+      <button class="button is-fullwidth is-rounded is-info is-light" onclick="document.getElementById('pic-url').value = '/static/thumb-default.jpeg';">Set to default</button><br>
+          <article class="message is-warning" id="msg-warning">
+  <div class="message-header">
+    <p>Warning</p>
+    <button class="delete" aria-label="delete" onclick="closeMsg('msg-warning')"></button>
+  </div>
+  <div class="message-body content">
+    Please do not violate the <a href="https://policies.axome.repl.co/terms.html">AXOME Terms of service</a>.
+ </div>
+</article>
+</div></div>
+      <button class="button is-primary" onclick="toggleModal('image-chooser')">OK</button>
+    </section>
+  </div>
+</div>
+
+{% endblock %}

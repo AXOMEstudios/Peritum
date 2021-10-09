@@ -1,3 +1,5 @@
+// source: https://bulma.io/documentation/components/navbar/
+
 document.addEventListener('DOMContentLoaded', () => {
 
   // Get all "navbar-burger" elements
@@ -23,3 +25,20 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 });
+
+function toggleModal(id) {
+document.getElementById(id).classList.toggle("is-active");
+}
+
+function closeMsg(id) {
+  document.getElementById(id).style.display = "none";
+  localStorage.setItem(id, "none");
+}
+
+function closeClosedMsgs() {
+  for (i of Object.keys(localStorage)) {
+    if (i.startsWith("msg-")) {
+      document.getElementById(i).style.display = "none";
+    }
+  }
+}

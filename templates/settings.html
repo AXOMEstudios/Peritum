@@ -9,9 +9,12 @@
 <section class="section px-6 my-6">
   <div class="columns is-vcentered">
     <div class="column is-one-quarter">
-      <figure class="image">
+      <figure class="image" onclick="toggleModal('image-chooser')">
         <img src="{{data['pic']}}" class="is-rounded is-profile-pic">
-      </figure>
+      </figure><br>
+      <strong>
+        Click image to change
+      </strong>
     </div>
     <div class="column px-3">
       <p class="title">
@@ -41,5 +44,33 @@ Peritum is synchronized with AXOME auth.
 </a>
 </blockquote>
 </section>
+
+<div class="modal" id="image-chooser">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Choose an image</p>
+      <button class="delete" aria-label="close" onclick="toggleModal('image-chooser')"></button>
+    </header>
+    <section class="modal-card-body content">
+      <h1>Pick an image</h1>
+      <div class="columns">
+      <div class="column is-half">
+        <figure class="image">
+        <img src="{{data['pic']}}" class="is-rounded is-profile-pic" id="preview-pic">
+      </figure><br>
+        </div><div class="column is-half">
+      <form action="/settings/save-pic" method="POST" id="chooser-form">
+        <input type="text" class="input" placeholder="Enter image URL..." name="pic" id="pic-url" oninput="document.getElementById('preview-pic').src = this.value;">
+      </form><br>
+
+  <article class="message is-warning">
+</article>
+</div></div>
+      <button class="button is-success" onclick="document.getElementById('chooser-form').submit()">Save changes</button>
+      <button class="button" onclick="toggleModal('image-chooser')">Cancel</button>
+    </section>
+  </div>
+</div>
 
 {% endblock %}

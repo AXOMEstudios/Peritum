@@ -81,9 +81,39 @@ def settings_bio_save():
     redirect("/")
   
   users.update({"name": user}, {"$set": {"bio": request.form["bio"]}})
+  flash("Biography updated successfully.", "success")
   return redirect("/profile/"+user)
 
-# defining error handlers
+@app.route("/settings/save-pic", methods=["POST"])
+def settings_pic_save():
+  if "username" in session.keys():
+    user = session["username"]
+  else:
+    redirect("/")
+
+  for i in ["png", "jpg", "jpeg", "webp", "tiff", "ico"]:
+    if request.form["pic"].endswith("."+i):
+      break
+  else:
+    flash("The image format is not supported. Supportet formats: png, jpg, jpeg, webp, tiff, ico.", "danger")
+    return redirect("/settings")
+      
+  users.update({"name": user}, {"$set": {"pic": request.form["pic"]}})
+
+  flash("Image updated successfully.", "success")
+  return redirect("/profile/"+user)
+
+@app.route("/write")
+def writeArticle():
+  if "username" in session.keys():
+    user = session["username"]
+  else:
+    redirect("/")
+    
+  return render_template("write.html", username=user)
+
+@app.route("/write/post", methods=["POST"])
+
 
 # starting the app capable for replit
 app.run(host="0.0.0.0", port=8080)

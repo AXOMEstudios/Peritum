@@ -2,13 +2,14 @@
 name = "peritum"
 version = "0.1.0"
 description = ""
-authors = ["AXOME <<>>"]
+authors = ["AXOME <axomedev@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
 Flask = "^2.0.1"
 replit = "^3.2.4"
 pymongo = "^3.12.0"
+dnspython = "^2.1.0"
 
 [tool.poetry.dev-dependencies]
 
