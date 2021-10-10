@@ -64,7 +64,13 @@ Peritum is synchronized with AXOME auth.
         <input type="text" class="input" placeholder="Enter image URL..." name="pic" id="pic-url" oninput="document.getElementById('preview-pic').src = this.value;">
       </form><br>
 
-  <article class="message is-warning">
+  <article class="message is-warning" id="msg-warning">
+  <div class="message-header">
+    <p>Warning</p>
+  </div>
+  <div class="message-body content">
+    Please do not violate the <a href="https://policies.axome.repl.co/terms.html">AXOME Terms of service</a>.
+ </div>
 </article>
 </div></div>
       <button class="button is-success" onclick="document.getElementById('chooser-form').submit()">Save changes</button>

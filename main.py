@@ -1,8 +1,11 @@
 from flask import Flask, render_template, session, flash, redirect, request
 from os import getenv
 import axomeapis.auth as auth
-import random
+import axomeapis.antixsrf as antixsrf
 import pymongo
+import datetime
+from bson.objectid import ObjectId
+import cloudinary
 
 # setting up the app
 app = Flask(__name__)
@@ -12,6 +15,13 @@ app.config["PERMANENT_SESSION_LIFETIME"] = 2592000
 client = pymongo.MongoClient("mongodb+srv://server:"+getenv("DB_SECRET")+"@axodb01.kpdbk.mongodb.net/peritum?retryWrites=true&w=majority")
 db = client["peritum"]
 users = db["users"]
+articles = db["articles"]
+
+cloudinary.config(
+  cloud_name = "axome",
+  api_key = getenv("CLOUDINARY_KEY"),
+  api_secret = getenv("CLOUDINARY_SECRET")
+)
 
 # destroying getenv function to prevent later access
 getenv = lambda: ""
@@ -61,7 +71,8 @@ def profile(username):
     user = ""
   
   profile = users.find_one({"name": username})
-  return render_template("profile.html", username=user, data=profile, name=profile["name"])
+  arts = articles.find({"author": username})
+  return render_template("profile.html", username=user, data=profile, name=profile["name"], articles=arts)
 
 @app.route("/settings")
 def settings():
@@ -109,11 +120,65 @@ def writeArticle():
     user = session["username"]
   else:
     redirect("/")
+
+  t = antixsrf.createEndpoint(user, "post")
     
-  return render_template("write.html", username=user)
+  return render_template("write.html", username=user, token=t)
 
 @app.route("/write/post", methods=["POST"])
+def postArticle():
+  if "username" in session.keys():
+    user = session["username"]
+  else:
+    redirect("/")
 
+  if not antixsrf.validateEndpoint(request.form["token"], user, "post"):
+    flash("Invalid verification token. Try again.", "danger")
+    return redirect("/write")
+  
+  for i in ["title", "description", "thumb", "article"]:
+    if not request.form[i]:
+      flash("You did not provide a(n) "+i, "warning")
+      return redirect("/write")
+
+  temp = ""
+  for i in request.form.values():
+    temp += i
+  if len(temp) > (1000*1024):
+    flash("Your article is too big to upload (over 1MB)", "warning")
+    return redirect("/write")
+
+  for i in ["png", "jpg", "jpeg", "webp", "tiff", "ico"]:
+    if request.form["thumb"].endswith("."+i):
+      break
+  else:
+    flash("The image format is not supported. Supportet formats: png, jpg, jpeg, webp, tiff, ico.", "danger")
+    return redirect("/write")
+
+  d = request.form
+  i = articles.insert_one({
+    "title": d["title"],
+    "description": d["description"],
+    "thumb": "https://res.cloudinary.com/axome/image/upload/w_240,h_180,c_scale/"+d["thumb"],
+    "image": "https://res.cloudinary.com/axome/image/upload/"+d["thumb"],
+    "article": d["article"],
+    "author": user,
+    "date": datetime.datetime.now().strftime("%d.%m.%Y, %H:%M")
+  })
+  users.update_one({"name": user}, {"$push": {"articles": i.inserted_id}})
+  flash("Article published successfully.", "success")
+
+  return redirect("/article/"+str(i.inserted_id))
+
+@app.route("/article/<i>")
+def readArticle(i):
+  if "username" in session.keys():
+    username = session["username"]
+  else:
+    username = ""
+  d = articles.find_one({"_id": ObjectId(i)})
+  author = users.find_one({"name": d["author"]})
+  return render_template("read.html", d=d, username=username, article=d["article"].replace("\\","\\\\"),author=author, article_number=len(author["articles"]), rt=round(len(d["article"].split(" "))/250))
 
 # starting the app capable for replit
 app.run(host="0.0.0.0", port=8080)

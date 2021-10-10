@@ -29,20 +29,20 @@
 <section class="section" id="articles">
   <h1 class="title">Articles by {{name}}</h1>
   {% if not data["articles"] %}
-  <div class="is-fullwidth has-text-centered"><h1 class="subtitle has-text-grey">{{name}} does not have any articles yet.</h1>
+  <div class="is-fullwidth has-text-centered">
+    
+    <h1 class="subtitle has-text-grey">{{name}} does not have any articles yet.</h1>
   {% endif %}
-  {% for i in data["articles"] %}
-<div class="notification is-light is-fullwidth is-title">
-  <div class="columns is-fullwidth is-vcentered">
-    <div class="column is-four-fifths">
-      {{i["title"]}}
-      </div<div class="column">v
-  <span class="icon">
-    <i class="fas fa-arrow-right"></i>
-  </span
-      </div>
-    </div
-</div>
+  {% for i in articles %}
+<div class="notification is-light is-fullwidth is-title columns is-mobile is-vcentered" onclick="document.location.href = '/article/{{i['_id']}}'">
+  
+  <div class="column is-one-fifth">
+    <div class="card is-thumb">
+  <figure class="image is-16by9 card-image is-thumb">
+    <img src="{{i['thumb']}}" class="is-thumb">
+  </figure></div></div><div class="column is-fullwidth">    <strong class="subtitle">{{i["title"]}}</strong>
+</div
+    </div>
   {% endfor %}
 </section>
 
