@@ -27,8 +27,39 @@
 <section class="section">
   <h1 class="title">Hottest articles 	&#128293;</h1>
   {% for i in hottest %}
+<div class="notification is-light is-fullwidth is-title columns is-mobile is-vcentered" onclick="document.location.href = '/article/{{i['_id']}}'">
+  
+  <div class="column is-one-fifth">
+    <div class="card is-thumb">
+      <figure class="image is-16by9 card-image is-thumb">
+        <img src="{{i['thumb']}}" class="is-thumb">
+      </figure>
+    </div>
+  </div>
+  <div class="column">        
+    <strong class="subtitle">{{i["title"]}}  </strong>
+</div
+ 
+</div></div> {% endfor %}
+</section>
 
-  {% endfor %}
+<section class="section">
+  <h1 class="title">Recommended articles 	&#128293;</h1>
+  {% for i in random %}
+<div class="notification is-light is-fullwidth is-title columns is-mobile is-vcentered" onclick="document.location.href = '/article/{{i['_id']}}'">
+  
+  <div class="column is-one-fifth">
+    <div class="card is-thumb">
+      <figure class="image is-16by9 card-image is-thumb">
+        <img src="{{i['thumb']}}" class="is-thumb">
+      </figure>
+    </div>
+  </div>
+  <div class="column">        
+    <strong class="subtitle">{{i["title"]}}  </strong>
+</div
+ 
+</div></div> {% endfor %}
 </section>
 
 {% endblock %}

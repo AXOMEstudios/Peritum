@@ -6,6 +6,7 @@ import pymongo
 import datetime
 from bson.objectid import ObjectId
 import cloudinary
+import random
 
 # setting up the app
 app = Flask(__name__)
@@ -26,6 +27,19 @@ cloudinary.config(
 # destroying getenv function to prevent later access
 getenv = lambda: ""
 
+# defining the "algorithm" for recommendations
+
+def rec_random():
+  x = list(articles.aggregate([{"$sample": { "size": 5}}]))
+  random.shuffle(x)
+  return x
+
+def rec_hottest():
+  return articles.find().limit(5)
+
+def recommend():
+  return list(rec_hottest()) + list(rec_random())
+
 # defining the views
 
 @app.before_request
@@ -38,7 +52,7 @@ def homepage():
     username = session["username"]
   else:
     username = ""
-  return render_template("index.html", username=username)
+  return render_template("index.html", username=username, hottest=rec_hottest(), random=rec_random())
 
 @app.route("/signin")
 def login():
@@ -178,7 +192,7 @@ def readArticle(i):
     username = ""
   d = articles.find_one({"_id": ObjectId(i)})
   author = users.find_one({"name": d["author"]})
-  return render_template("read.html", d=d, username=username, article=d["article"].replace("\\","\\\\"),author=author, article_number=len(author["articles"]), rt=round(len(d["article"].split(" "))/250))
+  return render_template("read.html", d=d, username=username, article=d["article"].replace("\\","\\\\"),author=author, article_number=len(author["articles"]), rt=round(len(d["article"].split(" "))/150), recommend=recommend())
 
 # starting the app capable for replit
 app.run(host="0.0.0.0", port=8080)
