@@ -20,6 +20,9 @@
           <span class="tag is-info is-medium is-rounded"><a href="/settings" class="has-text-white">Edit profile</a></span>
         {% endif %}
       </p>
+      <h2 class="subtitle has-text-grey">
+        {{len_articles}} articles • {{rep}} reputation
+      </h2>
       <p>
         {{data["bio"]}}
       </p>
@@ -39,9 +42,10 @@
     <div class="card is-thumb">
   <figure class="image is-16by9 card-image is-thumb">
     <img src="{{i['thumb']}}" class="is-thumb">
-  </figure></div></div><div class="column">    <strong class="subtitle">{{i["title"]}}</strong>
+  </figure></div></div><div class="column is-two-fifths">    <strong class="subtitle">{{i["title"]}}</strong>
 </div
-    </div></div></div>
+  <div class="column has-text-grey is-hidden-mobile">
+    <h2 class="subtitle">{{i['date']}} • {{i['likes']}} likes</h2>  </div></div>
   {% endfor %}
 </section>
 

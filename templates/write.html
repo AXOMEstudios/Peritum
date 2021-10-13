@@ -92,7 +92,7 @@ setTimeout(function() {
     <button class="delete" aria-label="delete" onclick="closeMsg('msg-help')"></button>
   </div>
   <div class="message-body content">
-    <h3>Writing a good article</h3>
+    <h3 class="has-text-info">Writing a good article</h3>
     When writing an article, you should follow these steps to get a good result:
     <ul>
       <li>Bind the reader to the article with interesting ideas and words</li>
@@ -113,39 +113,5 @@ setTimeout(function() {
 </article>
   </div>
 </section>
-
-<div class="modal" id="image-chooser">
-  <div class="modal-background"></div>
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">Choose an image</p>
-      <button class="delete" aria-label="close" onclick="toggleModal('image-chooser')"></button>
-    </header>
-    <section class="modal-card-body content">
-      <h1>Pick an image</h1>
-      <div class="columns">
-      <div class="column is-half">
-        <figure class="image is-16by9">
-        <img src="/static/thumb-default.jpeg" id="preview-pic">
-      </figure><br>
-        </div><div class="column is-half">
-      <form action="/settings/save-pic" method="POST" id="chooser-form">
-        <input type="text" class="input" placeholder="Enter image URL..." name="pic" id="pic-url" oninput="document.getElementById('preview-pic').src = this.value; document.getElementById('preview-large').src = this.value; document.getElementById('thumb-url-input').value = this.value;">
-      </form><br>
-      <button class="button is-fullwidth is-rounded is-info is-light" onclick="document.getElementById('pic-url').value = '/static/thumb-default.jpeg';">Set to default</button><br>
-          <article class="message is-warning" id="msg-warning">
-  <div class="message-header">
-    <p>Warning</p>
-    <button class="delete" aria-label="delete" onclick="closeMsg('msg-warning')"></button>
-  </div>
-  <div class="message-body content">
-    Please do not violate the <a href="https://policies.axome.repl.co/terms.html">AXOME Terms of service</a>.
- </div>
-</article>
-</div></div>
-      <button class="button is-primary" onclick="toggleModal('image-chooser')">OK</button>
-    </section>
-  </div>
-</div>
 
 {% endblock %}

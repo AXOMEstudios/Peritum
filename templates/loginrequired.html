@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Join Peritum!{% endblock %}
+{% block article_title %}Peritum - the expert for everything!{% endblock %}
+{% block article_description %}Everyone is a genius at something! Collecting thousands experts like you creates the place where everyone shares knowledge, interests and ideas - which makes Peritum the first place to go when having questions!{% endblock %}
+
+{% block content %}
+{% include "components/navbar.html" %}
+
+<section class="hero is-link is-fullheight center-container px-2">
+  <div class="has-text-centered">
+      <p class="title">
+        Join Peritum!
+      </p>
+      <p class="subtitle">
+        You are an expert at something! Why don't share that knowledge with others around the world and gain attention and admiration?
+      </p>
+    <a href="https://auth.axome.de/signin?url=https%3A%2F%2Fperitum.axome.repl.co%2Fsignin" class="button has-background-white-bis is-rounded has-text-link is-large mx-6">Join Peritum</a>
+    <br><br>
+    <h2 class="subtitle">
+      Like articles you enjoy with a tap, write your own ones and get recommendations for more fun on the platform!
+   <
+    <br><br><a onclick="window.history.back(1)" class="has-text-white-bis"><strong>No, thanks</strong></a>
+</div>
+</section>
+
+{% endblock %}

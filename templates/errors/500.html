@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Peritum - oops!{% endblock %}
+{% block article_title %}Oops - an error occured!{% endblock %}
+{% block article_description %}That didn't work - let's see whats wrong!{% endblock %}
+
+{% block content %}
+{% include "components/navbar.html" %}
+
+<section class="hero is-danger is-fullheight center-container px-2">
+  <div class="has-text-centered">
+      <p class="title">
+        Something went wrong.
+      </p>
+      <p class="subtitle">
+        This error is not your mistake. We probably made an error when working on the platform. <strong>We recorded the error information: date, error code and page URL.</strong>
+      </p>
+    <a onclick="window.history.back(1);" class="button is-dark is-rounded is-large mx-6">Back</a>
+       
+    <br><br><a href="/" class="has-text-dark"><strong>Back to homepage</strong></a>
+</div>
+</section>
+
+{% endblock %}

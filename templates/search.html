@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Peritum - {{query}}{% endblock %}
+{% block article_title %}The best articles "{{query}}"{% endblock %}
+{% block article_description %}Explore the best articles on Peritum!{% endblock %}
+
+{% block content %}
+{% include "components/navbar.html" %}
+
+<section class="hero is-dark is-halfheight center-container">
+  <div class="has-text-centered">
+      <p class="title">
+        Search results
+      </p>
+      <form action="/search" class="columns is-vcentered is-mobile mx-3">
+        <input class="input is-rounded is-size-4 is-half" name="query" placeholder="Type your question here..." value="{{query}}">
+        <button class="is-rounded has-background-dark is-borderless" type="submit">
+          <span class="material-icons has-text-link is-size-2">
+            search
+          </span>
+        </button>
+      </form>
+  </div>
+</section>
+<section class="section has-background-dark">
+  {% if not results %}
+<div class="is-fullwidth has-text-centered">
+  <h2 class="subtitle has-text-white">No results for "{{query}}" found.</h3>
+  {% endif %}
+  {% for i in results %}
+<div class="notification is-light is-fullwidth is-title columns is-vcentered" onclick="document.location.href = '/article/{{i['_id']}}'">
+  
+  <div class="column is-one-fifth">
+    <div class="card is-thumb">
+      <figure class="image is-16by9 card-image is-thumb">
+        <img src="{{i['thumb']}}" class="is-thumb">
+      </figure>
+    </div>
+  </div>
+  <div class="column">        
+    <strong class="subtitle">{{i["title"]}}  </strong>
+</div
+ 
+</div></div>
+{% endfor %}
+
+<article class="message is-link">
+  <div class="message-body content has-text-left">
+    <strong>Couldn't find what you were searching for?</strong>
+    <details>
+      <summary>Click to get searching tips</summary>
+      <ul>
+        <li>Make sure you spell the words correctly.</li>
+        <li>Mind the case-sensitivity</li>
+        <li>Use as many keywords you expect to appear in the article, seperated by spaces</li>
+      </ul>
+    </details>
+  </div>
+</article>
+</section>
+
+{% endblock %}

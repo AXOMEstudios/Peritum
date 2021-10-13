@@ -2,7 +2,7 @@ import random
 import string
 
 data = {}
-chars = string.ascii_letters + string.digits + string.punctuation
+chars = string.ascii_letters + string.digits
 
 def generateToken():
   res = ""

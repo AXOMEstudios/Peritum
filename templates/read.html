@@ -48,13 +48,14 @@ quill.setContents(JSON.parse(decodeHTMLentities("{{article}}")));
 
   </div>
   <div class="column">
-<article class="message is-info" id="msg-help">
+<article class="message is-info">
   <div class="message-header">
     <p>Article details</p>
   </div>
   <div class="message-body content">
     Published on {{d["date"]}}<br>
-    ~ {{rt}} minutes reading time<br><br>
+    ~ {{rt}} minutes reading time<br>
+    <strong>{{d["likes"]}} people like that</strong><br><br>
     <div class="columns is-vcentered is-mobile" onclick="document.location.href = '/profile/{{author['name']}}'">
       <div class="column">
         <figure class="image">
@@ -62,19 +63,47 @@ quill.setContents(JSON.parse(decodeHTMLentities("{{article}}")));
         </figure>
       </div><div class="column content">
         <h4>{{author["name"]}}</h4>
-        <h6 class="has-text-grey">{{article_number}} articles</h6>
+        <h6 class="has-text-grey">{{article_number}} articles • {{author['reputation']}} reputation</h6>
       </div>
     </div>
+    <a href="/article/{{d['_id']}}/like?token={{token}}" class="button is-info is-rounded is-fullwidth">&#10084; <strong> {{d["likes"]}}</strong></a>
   </div>
 </article>
-<article class="message is-success" id="msg-warning">
+<article class="message is-success">
   <div class="message-header">
-    <p>Share this article</p>
+    <p>Share this article with...</p>
   </div>
-  <div class="message-body has-text-centered has-text-success">
-    Coming soon
-  </div>
+  <div class="message-body columns">
+  <a href="mailto:?to=&subject={{d['title']}}&body=https%3A%2F%2Fperitum.axome.repl.co/article/{{d['_id']}}" class="button is-rounded is-success is-fullwidth">Mail</a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https://peritum.axome.repl.co/article/{{d['_id']}}" class="button is-rounded is-success is-fullwidth">Facebook</a>
+<a href="https://twitter.com/intent/tweet?url=https://peritum.axome.repl.co/article/{{d['_id']}}&text=" class="button is-rounded is-success is-fullwidth">Twitter</a>
+    </div>
 </article>
+
+<article class="message">
+  <div class="message-header">
+    <p>Recommendations</p>
+  </div>
+  <div class="message-body">
+{% if username %}
+  {% for i in recommend %}
+<a href="/article/{{i['_id']}}">
+    {{i["title"]}}
+</a><br><br>
+ {% endfor %}
+{% else %}
+<h2 class="subtitle">
+  Explore more
+</h2>
+<p>
+  Explore more of this and grow your knowledge to a legendary level with fun!
+</p>
+    <a class="button is-dark is-rounded is-fullwidth" href="https://auth.axome.de/signin?url=https%3A%2F%2Fperitum.axome.repl.co%2Fsignin">
+      <strong>Sign in</strong>
+</a>
+  {% endif %}
+</div>
+</article>  
     {% if username == "" %}
 <article class="message is-link">
   <div class="message-header">

@@ -6,8 +6,8 @@
 {% block content %}
 {% include "components/navbar.html" %}
 
-<section class="hero is-success is-halfheight center-container">
-  <div class="has-text-centered">
+<section class="hero hero-auto-bg is-success is-halfheight center-container">
+  <div class="has-text-centered has-black-textshadow">
       <p class="title">
         How can we help you today?
       </p>
@@ -15,8 +15,8 @@
         Search Peritum to find the best solutions to your problems
       </p>
       <form action="/search" class="columns is-vcentered is-mobile mx-3">
-        <input class="input is-rounded is-size-4 is-half" name="query" placeholder="Type your question here...">
-        <button class="is-rounded has-background-success is-borderless" type="submit">
+        <input class="input is-rounded is-size-4 is-half has-white-shadow" name="query" placeholder="Type your question here...">
+        <button class="is-rounded is-borderless has-white-textshadow" type="submit">
           <span class="material-icons has-text-link is-size-2">
             search
           </span>
@@ -27,7 +27,7 @@
 <section class="section">
   <h1 class="title">Hottest articles 	&#128293;</h1>
   {% for i in hottest %}
-<div class="notification is-light is-fullwidth is-title columns is-mobile is-vcentered" onclick="document.location.href = '/article/{{i['_id']}}'">
+<div class="notification is-light is-fullwidth is-title columns is-vcentered" onclick="document.location.href = '/article/{{i['_id']}}'">
   
   <div class="column is-one-fifth">
     <div class="card is-thumb">
@@ -44,9 +44,9 @@
 </section>
 
 <section class="section">
-  <h1 class="title">Recommended articles 	&#128293;</h1>
+  <h1 class="title">Recommended articles 	&#128161;</h1>
   {% for i in random %}
-<div class="notification is-light is-fullwidth is-title columns is-mobile is-vcentered" onclick="document.location.href = '/article/{{i['_id']}}'">
+<div class="notification is-light is-fullwidth is-title columns is-vcentered" onclick="document.location.href = '/article/{{i['_id']}}'">
   
   <div class="column is-one-fifth">
     <div class="card is-thumb">
@@ -62,4 +62,28 @@
 </div></div> {% endfor %}
 </section>
 
+<section class="section">
+  <h1 class="title">Top authors &#128077;</h1>
+  {% for i in lb %}
+<div class="notification is-light is-fullwidth is-title columns is-vcentered is-mobile" onclick="document.location.href = '/profile/{{i['name']}}'">
+  
+  <div class="column is-one-fifth">
+      <figure class="image is-64x64">
+        <img src="{{i['pic']}}">
+      </figure>
+  </div
+  <div class="column">        
+    <strong class="subtitle">{{i["name"]}} • {{i["reputation"]}} reputation</strong>
+</div
+ 
+</div></div> {% endfor %}
+<article class="message is-link">
+  <div class="message-body">
+    <strong>Would you like to be listed here?</strong> All you got to do is write a good article and gain high reputation!<br>
+    <div class="columns">
+      <div class="column is-four-fifths"></div><div class="column">
+    <a href="/write" class="button is-right is-rounded is-link is-fullwidth"><strong>Write</strong></a></div></div>
+  </div>
+</article>
+</section>
 {% endblock %}
