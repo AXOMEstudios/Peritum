@@ -1,7 +1,9 @@
-from flask import Flask, render_template, session, flash, redirect, request
+from flask import Flask, render_template, session, flash, redirect, request, send_file
+import io
 from os import getenv
 import axomeapis.auth as auth
 import axomeapis.antixsrf as antixsrf
+import axomeapis.sitemap as sitemap
 import pymongo
 import datetime
 from bson.objectid import ObjectId
@@ -13,7 +15,7 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = getenv("SECRET")
 app.config["PERMANENT_SESSION_LIFETIME"] = 2592000
 
-client = pymongo.MongoClient("mongodb+srv://server:"+getenv("DB_SECRET")+"@axodb01.kpdbk.mongodb.net/peritum?retryWrites=true&w=majority")
+client = pymongo.MongoClient("mongodb+srv://peritum-backend:"+getenv("DB_SECRET")+"@axodb01.kpdbk.mongodb.net/peritum?retryWrites=true&w=majority")
 db = client["peritum"]
 users = db["users"]
 articles = db["articles"]
@@ -53,7 +55,7 @@ def recommend():
 
 def leaderboard():
   return list(users.find().sort([("reputation",pymongo.DESCENDING)]).limit(5))
-
+  
 # defining the views
 
 @app.before_request
@@ -271,7 +273,7 @@ def search():
       "$search": "/^"+request.args["query"].replace("{", "").replace("}", "").replace("$", "")+"$/i"
     }})
 
-  return render_template("search.html", results=list(results.limit(20).sort([("ikes", 1)])), query=request.args["query"], username=username)
+  return render_template("search.html", results=list(results.limit(20).sort([("likes", 1)])), query=request.args["query"], username=username)
 
 # defining errorhandlers
 
@@ -284,7 +286,7 @@ def logError(req, err_code, err=""):
     "code": err_code,
     "url": req.url,
     "date": datetime.datetime.now().strftime("%d.%m.%Y, %H:%M"),
-    "info": err
+    "info": str(err)
   })
 
 @app.errorhandler(400)
@@ -300,6 +302,19 @@ def error_500(e):
 @app.route("/errors/<e>")
 def errorMsg(e):
   return render_template("errors/"+e+".html"), int(e)
+
+# generating the sitemap
+@app.route("/sitemap.xml")
+def sitemapView():
+  sm = sitemap.generateSiteMap(list(articles.find()),
+                                 list(users.find()), [
+                                   "",
+                                   "write",
+                                   "settings"
+                                 ]).encode()
+  return send_file(
+    io.BytesIO(sm),
+    mimetype='application/xml')
   
 # starting the app capable for replit
 app.run(host="0.0.0.0", port=8080)

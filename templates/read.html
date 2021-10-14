@@ -67,6 +67,13 @@ quill.setContents(JSON.parse(decodeHTMLentities("{{article}}")));
       </div>
     </div>
     <a href="/article/{{d['_id']}}/like?token={{token}}" class="button is-info is-rounded is-fullwidth">&#10084; <strong> {{d["likes"]}}</strong></a>
+    <details>
+      <summary><strong>More options</strong></summary>
+      <ul>
+        <li><a href="mailto:axomedev@gmail.com?subject=Peritum%20Report&body=https%3A%2F%2Fperitum.axome.repl.co%2Farticle%2F{{d['_id']}}">
+          Report this article</a></li>
+      </ul>
+    </details>
   </div>
 </article>
 <article class="message is-success">
