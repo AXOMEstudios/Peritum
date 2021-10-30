@@ -21,6 +21,7 @@ users = db["users"]
 articles = db["articles"]
 likes = db["likes"]
 errorlog = db["errors"]
+comments = db["comments"]
 
 cloudinary.config(
   cloud_name = "axome",
@@ -56,11 +57,13 @@ def recommend():
 def leaderboard():
   return list(users.find().sort([("reputation",pymongo.DESCENDING)]).limit(5))
   
-# defining the views
+### defining the views ###
 
 @app.before_request
 def before_req():
   session.permanent = True
+
+# home
 
 @app.route("/")
 def homepage():
@@ -69,6 +72,8 @@ def homepage():
   else:
     username = ""
   return render_template("index.html", username=username, hottest=rec_hottest(), random=rec_random(), lb=leaderboard())
+
+# profile management
 
 @app.route("/signin")
 def login():
@@ -145,6 +150,8 @@ def settings_pic_save():
   flash("Image updated successfully.", "success")
   return redirect("/profile/"+user)
 
+# write
+
 @app.route("/write")
 def writeArticle():
   if "username" in session.keys():
@@ -206,6 +213,11 @@ def postArticle():
     "likes": 0
   })
   users.update_one({"name": user}, {"$push": {"articles": i.inserted_id}})
+  comments.insert_one({
+    "article": i.inserted_id,
+    "comments": [],
+    "title": d["title"]
+  })
   flash("Article published successfully.", "success")
 
   return redirect("/article/"+str(i.inserted_id))
@@ -261,6 +273,36 @@ def likeArticle(i):
     flash("Article liked!", "success")
   return redirect("/article/"+i)
 
+# comment system
+
+@app.route("/article/<i>/comments")
+def readComments(i):
+  rec = comments.find_one({"article": ObjectId(i)})
+  return render_template("comments.html", comments=reversed(rec["comments"]), title=rec["title"], token=(antixsrf.createEndpoint(session["username"], "comment") if "username" in session.keys() else ""), article=i, username=(session["username"] if "username " in session.keys() else ""))
+
+@app.route("/article/<i>/comments/post", methods=["POST"])
+def postComment(i):
+  if not "username" in session.keys():
+    return redirect("/loginrequired")
+  if not request.form["text"]:
+    flash("Please provide a comment to send", "warning")
+    return redirect("/article/"+i+"/comments")
+  if len(request.form["text"]) >= 3000:
+    flash("Your comment is too long (> 3000 characters)", "danger")
+    return redirect("/article/"+i+"/comments")
+  if not antixsrf.validateEndpoint(request.form["token"], session["username"], "comment"):
+    flash(request.form["token"], "danger")
+    return redirect("/article/"+i+"/comments")
+  comments.update_one({"article": ObjectId(i)}, {"$push": {"comments": {
+    "author": session["username"],
+    "text": request.form["text"],
+    "date": datetime.datetime.now().strftime("%d.%m.%Y, %H:%M")
+  }}})
+  flash("Comment sent successfully.", "success")
+  return redirect("/article/"+i+"/comments")
+  
+# search
+
 @app.route("/search")
 def search():
   if "username" in session.keys():
@@ -304,6 +346,7 @@ def errorMsg(e):
   return render_template("errors/"+e+".html"), int(e)
 
 # generating the sitemap
+  
 @app.route("/sitemap.xml")
 def sitemapView():
   sm = sitemap.generateSiteMap(list(articles.find()),

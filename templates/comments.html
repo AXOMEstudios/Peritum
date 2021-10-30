@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Comments on {{title}}{% endblock %}
+{% block article_title %}Peritum - the expert for everything!{% endblock %}
+{% block article_description %}Contribute at Peritum to help out other people with ease and fun!{% endblock %}
+
+{% block content %}
+{% include "components/navbar.html" %}
+
+<section class="section my-6">
+      <p class="title">
+        {{title}}
+      </p>
+      <p class="subtitle">
+        Comments • <a href="/article/{{article}}">Back to article</a>
+      </p>
+
+<form action="/article/{{article}}/comments/post" method="POST">
+  <input type="text" class="input is-borderless is-medium" name="text" placeholder="Type your comment, opinion or tips here..."><br><br>
+  <input type="hidden" name="token" value="{{token}}">
+  <div class="columns">
+    <div class="column is-two-thirds"></div>
+    <div class="column">
+      <button type="submit" class="button is-rounded is-link is-fullwidth">Comment</button>
+    </div>
+  </div>
+</form><br>
+
+{% for i in comments %}
+
+<div class="box is-fullwidth">
+  <a href="/profile/{{i['author']}}"><strong>{{i["author"]}}</strong></a> • {{i["date"]}} • <a href="mailto:axomedev@gmail.com?subject=Peritum%20Report&body=Comment%20https%3A%2F%2Fperitum.axome.repl.co%2Farticle%2F{{article}}%2Fcomments%20by%20{{i['author']}}">Report</a><br>
+  <p>
+    {{i["text"]}}
+  </p>
+</div>
+
+{% endfor %}
+
+</section>
+
+{% endblock %}

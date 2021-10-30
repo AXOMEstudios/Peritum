@@ -46,6 +46,10 @@ quill.setContents(JSON.parse(decodeHTMLentities("{{article}}")));
 } catch(e) {}
 </script>
 
+<a href="/article/{{d['_id']}}/comments" class="box">
+  <strong>Add or read comments to this article</strong>
+</a>
+    
   </div>
   <div class="column">
 <article class="message is-info">
@@ -72,6 +76,7 @@ quill.setContents(JSON.parse(decodeHTMLentities("{{article}}")));
       <ul>
         <li><a href="mailto:axomedev@gmail.com?subject=Peritum%20Report&body=https%3A%2F%2Fperitum.axome.repl.co%2Farticle%2F{{d['_id']}}">
           Report this article</a></li>
+        <li><a href="/article/{{d['_id']}}/comments">View comments</a></li>
       </ul>
     </details>
   </div>

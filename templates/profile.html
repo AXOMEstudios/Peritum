@@ -37,7 +37,7 @@
     <h1 class="subtitle has-text-grey">{{name}} does not have any articles yet.</h1></div>
   {% endif %}
   {% for i in articles %}
-<div class="columns is-mobile is-vcentered" onclick="document.location.href = '/article/{{i['_id']}}'">
+<div class="columns is-mobile is-vcentered is-clickable" onclick="document.location.href = '/article/{{i['_id']}}'">
   <div class="column is-one-fifth">
     <div class="card is-thumb">
   <figure class="image is-16by9 card-image is-thumb">

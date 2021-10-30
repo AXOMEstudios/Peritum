@@ -16,7 +16,7 @@
       </p>
       <form action="/search" class="columns is-vcentered is-mobile mx-3">
         <input class="input is-rounded is-size-4 is-half has-white-shadow" name="query" placeholder="Type your question here...">
-        <button class="is-rounded is-borderless" type="submit">
+        <button class="is-rounded is-borderless backgroundless" type="submit">
           <span class="material-icons has-text-link is-size-2">
             search
           </span>
@@ -27,7 +27,7 @@
 <section class="section">
   <h1 class="title">Hottest articles 	&#128293;</h1>
   {% for i in hottest %}
-<div class="notification is-light is-fullwidth is-title columns is-vcentered" onclick="document.location.href = '/article/{{i['_id']}}'">
+<div class="notification is-light is-fullwidth is-title columns is-vcentered is-clickable" onclick="document.location.href = '/article/{{i['_id']}}'">
   
   <div class="column is-one-fifth">
     <div class="card is-thumb">
@@ -46,7 +46,7 @@
 <section class="section">
   <h1 class="title">Recommended articles 	&#128161;</h1>
   {% for i in random %}
-<div class="notification is-light is-fullwidth is-title columns is-vcentered" onclick="document.location.href = '/article/{{i['_id']}}'">
+<div class="notification is-light is-fullwidth is-title columns is-vcentered is-clickable" onclick="document.location.href = '/article/{{i['_id']}}'">
   
   <div class="column is-one-fifth">
     <div class="card is-thumb">
@@ -65,11 +65,11 @@
 <section class="section">
   <h1 class="title">Top authors &#128077;</h1>
   {% for i in lb %}
-<div class="notification is-light is-fullwidth is-title columns is-vcentered is-mobile" onclick="document.location.href = '/profile/{{i['name']}}'">
+<div class="notification is-light is-fullwidth is-title columns is-vcentered is-mobile is-clickable" onclick="document.location.href = '/profile/{{i['name']}}'">
   
   <div class="column is-one-fifth">
       <figure class="image is-64x64">
-        <img src="{{i['pic']}}">
+        <img class="is-rounded" src="{{i['pic']}}">
       </figure>
   </div
   <div class="column">        
