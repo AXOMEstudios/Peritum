@@ -12,8 +12,36 @@
       </p>
       <p class="subtitle">
         Comments • <a href="/article/{{article}}">Back to article</a>
-      </p>
-
+{% if username == author %}
+  • <a onclick="toggleModal('toggleComments')">Settings for comments</a>
+  
+<div class="modal" id="toggleComments">
+  <div class="modal-background"></div>
+  <div class="modal-content box">
+    <h1 class="title">
+    {% if activated %}
+      Deactivate comments? (Comments are currently activated)
+    {% else %}
+      Re-activate comments? (Comments are currently deactivated)
+    {% endif %}
+    </h1>
+    <p>
+      Are you sure you want to do this? When deactivating, all comments will be deleted and no one can add more of them, but when reactivating, everyone will be able to. <strong>If you receive hate, please report the problematic commenters to us!</strong>
+    </p><hr>
+    <a href="/article/{{article}}/comments/toggle?token={{token}}" class="button is-danger is-rounded is-fullwidth">{% if activated %}
+      Deactivate comments
+    {% else %}
+      Re-activate comments
+    {% endif %}
+    </a><br>
+    <button onclick="toggleModal('toggleComments')" class="button is-success is-light is-rounded is-fullwidth">Cancel</button>
+  </div>
+  <button class="modal-close is-large" aria-label="close" onclick="toggleModal('toggleComments')"></button>
+</div>
+{% endif %}
+  </a>
+      </p><hr>
+{% if activated %}
 <form action="/article/{{article}}/comments/post" method="POST">
   <input type="text" class="input is-borderless is-medium" name="text" placeholder="Type your comment, opinion or tips here..."><br><br>
   <input type="hidden" name="token" value="{{token}}">
@@ -35,6 +63,13 @@
 </div>
 
 {% endfor %}
+{% else %}
+
+
+<h1 class="title">Comments are deactivated for this article</h1>
+<h2 class="subtitle">Sorry, the comment function has been deactivted for this article.</h2> 
+
+{% endif %}
 
 </section>
 

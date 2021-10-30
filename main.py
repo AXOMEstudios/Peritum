@@ -216,7 +216,8 @@ def postArticle():
   comments.insert_one({
     "article": i.inserted_id,
     "comments": [],
-    "title": d["title"]
+    "title": d["title"],
+    "activated": True
   })
   flash("Article published successfully.", "success")
 
@@ -278,7 +279,7 @@ def likeArticle(i):
 @app.route("/article/<i>/comments")
 def readComments(i):
   rec = comments.find_one({"article": ObjectId(i)})
-  return render_template("comments.html", comments=reversed(rec["comments"]), title=rec["title"], token=(antixsrf.createEndpoint(session["username"], "comment") if "username" in session.keys() else ""), article=i, username=(session["username"] if "username " in session.keys() else ""))
+  return render_template("comments.html", comments=reversed(rec["comments"]), title=rec["title"], token=(antixsrf.createEndpoint(session["username"], "comment") if "username" in session.keys() else ""), article=i, username=(session["username"] if "username" in session.keys() else ""), activated=rec["activated"], author=articles.find_one({"_id": ObjectId(i)})["author"])
 
 @app.route("/article/<i>/comments/post", methods=["POST"])
 def postComment(i):
@@ -290,8 +291,11 @@ def postComment(i):
   if len(request.form["text"]) >= 3000:
     flash("Your comment is too long (> 3000 characters)", "danger")
     return redirect("/article/"+i+"/comments")
+  if not comments.find_one({"article": ObjectId(i)})["activated"]:
+    flash("Comments on this article are deactivated.", "danger")
+    return redirect("/article/"+i+"/comments")
   if not antixsrf.validateEndpoint(request.form["token"], session["username"], "comment"):
-    flash(request.form["token"], "danger")
+    flash("Invalid security key, try again", "danger")
     return redirect("/article/"+i+"/comments")
   comments.update_one({"article": ObjectId(i)}, {"$push": {"comments": {
     "author": session["username"],
@@ -299,6 +303,19 @@ def postComment(i):
     "date": datetime.datetime.now().strftime("%d.%m.%Y, %H:%M")
   }}})
   flash("Comment sent successfully.", "success")
+  return redirect("/article/"+i+"/comments")
+
+@app.route("/article/<i>/comments/toggle")
+def toggleComments(i):
+  if articles.find_one({"_id": ObjectId(i)})["author"] != session["username"]:
+    flash("Not permitted", "danger")
+    return redirect("/article/"+i+"/comments")
+  if not antixsrf.validateEndpoint(request.args["token"], session["username"], "comment"):
+    flash("Invalid security key, try again", "danger")
+    return redirect("/article/"+i+"/comments")
+  comments.update({"article": ObjectId(i)}, {"$set": {"activated": (not comments.find_one({"article": ObjectId(i)})["activated"]), "comments": []}})
+
+  flash("Settings updated successfully.", "success")
   return redirect("/article/"+i+"/comments")
   
 # search

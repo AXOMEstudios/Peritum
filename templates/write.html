@@ -74,7 +74,7 @@ quill.on('text-change', function(delta, oldDelta, source) {
   document.getElementById("article-content").value = JSON.stringify(quill.getContents());
 });
 
-setTimeout(function() {
+setInterval(function() {
   localStorage.setItem("draft", JSON.stringify(quill.getContents()));
 }, 10000);
 </script>
