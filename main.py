@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, flash, redirect, request, send_file
+from flask import Flask, render_template, session, flash, redirect, request, send_file, send_from_directory
 import io
 from os import getenv
 import axomeapis.auth as auth
@@ -108,8 +108,8 @@ def profile(username):
   
   profile = users.find_one({"name": username})
   arts = articles.find({"author": username})
-  return render_template("profile.html", username=user, data=profile, name=profile["name"], articles=reversed(list(arts)), len_articles=len(list(profile["articles"])), rep=profile["reputation"])
-
+  starred = articles.find({"_id": {"$in": profile["starred"]}})
+  return render_template("profile.html", username=user, data=profile, name=profile["name"], articles=reversed(list(arts)), len_articles=len(list(profile["articles"])), rep=profile["reputation"], starred=list(starred))
 @app.route("/settings")
 def settings():
   if "username" in session.keys():
@@ -317,7 +317,23 @@ def toggleComments(i):
 
   flash("Settings updated successfully.", "success")
   return redirect("/article/"+i+"/comments")
-  
+
+@app.route("/article/<i>/star")
+def star_article(i):
+  if not "username" in session.keys():
+    return redirect("/loginrequired")
+
+  if not antixsrf.validateEndpoint(request.args["token"], session["username"], "like"):
+    flash("Invalid security key, try again.", "danger")
+    return redirect("/article/"+i)
+
+  if ObjectId(i) in users.find_one({"name": session["username"]})["starred"]:
+    users.update({"name": session["username"]}, {"$pull": {"starred": ObjectId(i)}})
+    flash("Unstarred article successfully, it has been removed from your profile page.", "success")
+  else:
+    users.update({"name": session["username"]}, {"$push": {"starred": ObjectId(i)}})
+    flash("Starred article successfully, it's now visible on your profile page.", "success")
+  return redirect("/article/"+i) 
 # search
 
 @app.route("/search")
@@ -375,6 +391,12 @@ def sitemapView():
   return send_file(
     io.BytesIO(sm),
     mimetype='application/xml')
+
+# stuff
+
+@app.route("/apple-touch-icon.png")
+def apple_touch_icon():
+  return send_from_directory(app.static_folder, "touch-icon.png")
   
 # starting the app capable for replit
 app.run(host="0.0.0.0", port=8080)

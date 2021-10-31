@@ -49,4 +49,32 @@
   {% endfor %}
 </section>
 
+<section class="section" id="articles">
+  <h1 class="title">Starred articles</h1>
+  <article class="message is-link" id="what-are-starred-articles">
+  <div class="message-header">
+    <p>What are starred articles?</p>
+    <button class="delete" aria-label="delete" onclick="closeMsg('what-are-starred-articles')"></button>
+  </div>
+  <div class="message-body">
+    Starred articles are articles this profile enjoyed and wants to share with you; you can click on the star icon at the side of an article page to add the article to your profile and recommend it to other users.
+  </div>
+</article>
+  {% if not starred %}
+  <div class="is-fullwidth has-text-centered">
+    <h1 class="subtitle has-text-grey">{{name}} didn't star any articles yet.</h1></div>
+  {% endif %}
+  {% for i in starred %}
+<div class="columns is-mobile is-vcentered is-clickable" onclick="document.location.href = '/article/{{i['_id']}}'">
+  <div class="column is-one-fifth">
+    <div class="card is-thumb">
+  <figure class="image is-16by9 card-image is-thumb">
+    <img src="{{i['thumb']}}" class="is-thumb">
+  </figure></div></div><div class="column is-two-fifths">    <strong class="subtitle">{{i["title"]}}</strong>
+</div
+  <div class="column has-text-grey is-hidden-mobile">
+    <h2 class="subtitle">{{i['author']}} • {{i['likes']}} likes</h2>  </div></div>
+  {% endfor %}
+</section>
+
 {% endblock %}
