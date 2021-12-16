@@ -37,8 +37,8 @@
     </div>
   </div>
   <div class="column">        
-    <strong class="subtitle">{{i["title"]}}  </strong>
-</div
+    <strong class="subtitle">{{i["title"]}}</strong>
+</div>
  
 </div></div> {% endfor %}
 </section>
@@ -57,7 +57,26 @@
   </div>
   <div class="column">        
     <strong class="subtitle">{{i["title"]}}  </strong>
-</div
+</div>
+ 
+</div></div> {% endfor %}
+</section>
+
+<section class="section">
+  <h1 class="title">"How to make..." series &#x1F35F;</h1>
+  {% for i in howto %}
+<div class="notification is-light is-fullwidth is-title columns is-vcentered is-clickable" onclick="document.location.href = '/article/{{i['_id']}}'">
+  
+  <div class="column is-one-fifth">
+    <div class="card is-thumb">
+      <figure class="image is-16by9 card-image is-thumb">
+        <img src="{{i['thumb']}}" class="is-thumb">
+      </figure>
+    </div>
+  </div>
+  <div class="column">        
+    <strong class="subtitle">{{i["title"]}}  </strong>
+</div>
  
 </div></div> {% endfor %}
 </section>
@@ -71,10 +90,10 @@
       <figure class="image is-64x64">
         <img class="is-rounded" src="{{i['pic']}}">
       </figure>
-  </div
+  </div>
   <div class="column">        
     <strong class="subtitle">{{i["name"]}} • {{i["reputation"]}} reputation</strong>
-</div
+</div>
  
 </div></div> {% endfor %}
 <article class="message is-link">

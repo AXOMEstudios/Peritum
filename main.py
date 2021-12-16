@@ -1,5 +1,6 @@
 from flask import Flask, render_template, session, flash, redirect, request, send_file, send_from_directory
 import io
+from difflib import SequenceMatcher
 from os import getenv
 import axomeapis.auth as auth
 import axomeapis.antixsrf as antixsrf
@@ -22,6 +23,7 @@ articles = db["articles"]
 likes = db["likes"]
 errorlog = db["errors"]
 comments = db["comments"]
+messages = db["messages"]
 
 cloudinary.config(
   cloud_name = "axome",
@@ -34,7 +36,7 @@ articles.create_index([('article', pymongo.TEXT),('title', pymongo.TEXT)], name=
 # destroying getenv function to prevent later access
 getenv = lambda: ""
 
-# defining the "algorithm" for recommendations
+# defining the "algorithms" for recommendations
 
 def rec_random():
   x = list(articles.aggregate([{"$sample": { "size": 5}}]))
@@ -56,6 +58,19 @@ def recommend():
 
 def leaderboard():
   return list(users.find().sort([("reputation",pymongo.DESCENDING)]).limit(5))
+
+howto_times = 0
+
+howto = articles.find({
+  "$text": {
+    "$search": "How to make"
+}}).limit(5)
+
+def loadHowToSeries():
+  return articles.find({
+    "$text": {
+    "$search": "How to make"
+  }}).limit(5)
   
 ### defining the views ###
 
@@ -69,9 +84,21 @@ def before_req():
 def homepage():
   if "username" in session.keys():
     username = session["username"]
+    if messages.count_documents({"user": username}, limit=1) > 0:
+      for i in messages.find_one({"user": username})["messages"]:
+        flash(i[0],i[1])
+        messages.delete_one({"user": username})
   else:
     username = ""
-  return render_template("index.html", username=username, hottest=rec_hottest(), random=rec_random(), lb=leaderboard())
+  return render_template("index.html", username=username, hottest=rec_hottest(), random=rec_random(), lb=leaderboard(), howto=loadHowToSeries())
+
+@app.route("/about")
+def about_peritum():
+  if "username" in session.keys():
+    username = session["username"]
+  else:
+    username = ""
+  return render_template("about.html", username=username)
 
 # profile management
 
@@ -85,7 +112,8 @@ def login():
       "articles": [],
       "pic": "/static/pic-default.png",
       "bio": "Hello, I'm "+session["username"]+"!",
-      "reputation": 0
+      "reputation": 0,
+      "starred": []
     })
     return render_template("new.html", username=session["username"]) 
   
@@ -291,12 +319,20 @@ def postComment(i):
   if len(request.form["text"]) >= 3000:
     flash("Your comment is too long (> 3000 characters)", "danger")
     return redirect("/article/"+i+"/comments")
-  if not comments.find_one({"article": ObjectId(i)})["activated"]:
+  comms = comments.find_one({"article": ObjectId(i)})
+  if not comms["activated"]:
     flash("Comments on this article are deactivated.", "danger")
     return redirect("/article/"+i+"/comments")
   if not antixsrf.validateEndpoint(request.form["token"], session["username"], "comment"):
     flash("Invalid security key, try again", "danger")
     return redirect("/article/"+i+"/comments")
+  for comment in comms["comments"]:
+    if (comment["author"] == session["username"]) and (SequenceMatcher(None, comment["text"], request.form["text"]).ratio() > 0.8):
+      flash("You posted something too similar to this already.", "danger")
+      return redirect("/article/"+i+"/comments")
+    elif SequenceMatcher(None, comment["text"], request.form["text"]).ratio() > 0.92:
+      flash(comment["author"]+" already said something very similar to this.", "danger")
+      return redirect("/article/"+i+"/comments")
   comments.update_one({"article": ObjectId(i)}, {"$push": {"comments": {
     "author": session["username"],
     "text": request.form["text"],
@@ -328,10 +364,10 @@ def star_article(i):
     return redirect("/article/"+i)
 
   if ObjectId(i) in users.find_one({"name": session["username"]})["starred"]:
-    users.update({"name": session["username"]}, {"$pull": {"starred": ObjectId(i)}})
+    users.update_one({"name": session["username"]}, {"$pull": {"starred": ObjectId(i)}})
     flash("Unstarred article successfully, it has been removed from your profile page.", "success")
   else:
-    users.update({"name": session["username"]}, {"$push": {"starred": ObjectId(i)}})
+    users.update_one({"name": session["username"]}, {"$push": {"starred": ObjectId(i)}})
     flash("Starred article successfully, it's now visible on your profile page.", "success")
   return redirect("/article/"+i) 
 # search
@@ -383,11 +419,12 @@ def errorMsg(e):
 @app.route("/sitemap.xml")
 def sitemapView():
   sm = sitemap.generateSiteMap(list(articles.find()),
-                                 list(users.find()), [
-                                   "",
-                                   "write",
-                                   "settings"
-                                 ]).encode()
+    list(users.find()), [
+      "",
+      "write",
+      "settings",
+      "about"
+  ]).encode()
   return send_file(
     io.BytesIO(sm),
     mimetype='application/xml')
